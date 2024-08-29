@@ -6998,10 +6998,10 @@ function Invoke-GraphRunner{
     }
 
     # Apps
-    if(!$DisableApps){
-        Write-Output -ForegroundColor yellow "[*] Now getting applications"
-        Invoke-DumpApps -Tokens $tokens -GraphRun | Out-File -Encoding ascii "$foldername\apps.txt"
-    }
+    #if(!$DisableApps){
+        #Write-Output -ForegroundColor yellow "[*] Now getting applications"
+        #Invoke-DumpApps -Tokens $tokens -GraphRun | Out-File -Encoding ascii "$foldername\apps.txt"
+    #}
 
     # Email
     if(!$DisableEmail){
