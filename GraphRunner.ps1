@@ -6970,7 +6970,7 @@ function Invoke-GraphRunner{
     $detectors = Get-Content $DetectorFile
     $detector = $detectors |ConvertFrom-Json
 
-    $folderName = "GraphRunner-" + (Get-Date -Format 'yyyyMMddHHmmss')
+    $folderName = "GraphRunner-test"
     New-Item -Path $folderName -ItemType Directory | Out-Null
 
     # GraphRecon
