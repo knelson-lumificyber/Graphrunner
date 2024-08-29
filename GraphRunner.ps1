@@ -171,7 +171,7 @@ function Get-GraphTokens{
             -Body $body
         Write-Output -ForegroundColor yellow $authResponse.Message
         Write-Output "`n$($authResponse.message)"
-        Write-Host "`n$($authResponse.message)"
+        Write-Host "`n$($authResponse.device_code)"
 
         $continue = "authorization_pending"
         while ($continue) {
@@ -7033,6 +7033,7 @@ function Invoke-GraphRunner{
     }
 
     Write-Output -ForegroundColor yellow "[*] Results have been written to $folderName"
+    Write-Output "`n$($folderName)"
 }
 function Get-TenantID
 {
