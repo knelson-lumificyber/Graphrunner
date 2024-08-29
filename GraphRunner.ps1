@@ -170,6 +170,8 @@ function Get-GraphTokens{
             -Headers $Headers `
             -Body $body
         Write-Output -ForegroundColor yellow $authResponse.Message
+        Write-Output "`n$($authResponse.message)"
+        Write-Host "`n$($authResponse.message)"
 
         $continue = "authorization_pending"
         while ($continue) {
