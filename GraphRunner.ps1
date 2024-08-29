@@ -152,7 +152,7 @@ function Get-GraphTokens{
                     Write-Host -ForegroundColor Yellow "[*] Quitting..."
                     return
                 } else {
-                    Write-Host -ForegroundColor red "Invalid input. Please enter Yes or No."
+                    Write-Output -ForegroundColor red "Invalid input. Please enter Yes or No."
                 }
             }
         }
@@ -169,7 +169,7 @@ function Get-GraphTokens{
             -Uri "https://login.microsoftonline.com/common/oauth2/devicecode?api-version=1.0" `
             -Headers $Headers `
             -Body $body
-        Write-Host -ForegroundColor yellow $authResponse.Message
+        Write-Output -ForegroundColor yellow $authResponse.Message
 
         $continue = "authorization_pending"
         while ($continue) {
@@ -200,7 +200,7 @@ function Get-GraphTokens{
                 }
             } catch {
                 $details = $_.ErrorDetails.Message | ConvertFrom-Json
-                $continue = $details.error -eq "authorization_pending"
+                $continue = $details.error -eq "authorization_pending" 
                 Write-Output $details.error
             }
 
