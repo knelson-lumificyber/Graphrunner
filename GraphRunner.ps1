@@ -6942,25 +6942,25 @@ function Invoke-GraphRunner{
     )
     
     if($Tokens){
-        Write-Host -ForegroundColor yellow "[*] Using the provided access tokens."
+        Write-Output -ForegroundColor yellow "[*] Using the provided access tokens."
     }
     else{
          # Login
-         Write-Host -ForegroundColor yellow "[*] First, you need to login." 
-         Write-Host -ForegroundColor yellow "[*] If you already have tokens you can use the -Tokens parameter to pass them to this function."
+         Write-Output -ForegroundColor yellow "[*] First, you need to login." 
+         Write-Output -ForegroundColor yellow "[*] If you already have tokens you can use the -Tokens parameter to pass them to this function."
          while($auth -notlike "Yes"){
                 Write-Host -ForegroundColor cyan "[*] Do you want to authenticate now (yes/no)?"
                 $answer = Read-Host 
                 $answer = $answer.ToLower()
                 if ($answer -eq "yes" -or $answer -eq "y") {
-                    Write-Host -ForegroundColor yellow "[*] Running Get-GraphTokens now..."
+                    Write-Output -ForegroundColor yellow "[*] Running Get-GraphTokens now..."
                     $tokens = Get-GraphTokens -ExternalCall
                     $auth = "Yes"
                 } elseif ($answer -eq "no" -or $answer -eq "n") {
-                    Write-Host -ForegroundColor Yellow "[*] Quitting..."
+                    Write-Output -ForegroundColor Yellow "[*] Quitting..."
                     return
                 } else {
-                    Write-Host -ForegroundColor red "Invalid input. Please enter Yes or No."
+                    Write-Output -ForegroundColor red "Invalid input. Please enter Yes or No."
                 }
             }
     }
@@ -6975,31 +6975,31 @@ function Invoke-GraphRunner{
 
     # GraphRecon
     if(!$DisableRecon){
-        Write-Host -ForegroundColor yellow "[*] Now running Invoke-GraphRecon."
+        Write-Output -ForegroundColor yellow "[*] Now running Invoke-GraphRecon."
         Invoke-GraphRecon -Tokens $tokens -GraphRun | Out-File -Encoding ascii "$folderName\recon.txt"
     }
 
     # Users
     if(!$DisableUsers){
-        Write-Host -ForegroundColor yellow "[*] Now getting all users"
+        Write-Output -ForegroundColor yellow "[*] Now getting all users"
         Get-AzureADUsers -Tokens $tokens -GraphRun -outfile "$folderName\users.txt"
     }
 
     # Groups
     if(!$DisableGroups){
-        Write-Host -ForegroundColor yellow "[*] Now getting all groups"
+        Write-Output -ForegroundColor yellow "[*] Now getting all groups"
         Get-SecurityGroups -Tokens $tokens -GraphRun | Out-File -Encoding ascii "$folderName\groups.txt"
     }
 
     # CAPS
     if(!$DisableCAPS){
-        Write-Host -ForegroundColor yellow "[*] Now getting conditional access policies"
+        Write-Output -ForegroundColor yellow "[*] Now getting conditional access policies"
         Invoke-DumpCAPS -Tokens $tokens -ResolveGuids -GraphRun | Out-File -Encoding ascii "$folderName\caps.txt"
     }
 
     # Apps
     if(!$DisableApps){
-        Write-Host -ForegroundColor yellow "[*] Now getting applications"
+        Write-Output -ForegroundColor yellow "[*] Now getting applications"
         Invoke-DumpApps -Tokens $tokens -GraphRun | Out-File -Encoding ascii "$foldername\apps.txt"
     }
 
@@ -7007,7 +7007,7 @@ function Invoke-GraphRunner{
     if(!$DisableEmail){
         $mailout = "$folderName\interesting-mail.csv"
 
-        Write-Host -ForegroundColor yellow "[*] Now searching Email using detector file $DetectorFile. Results will be written to $folderName."
+        Write-Output -ForegroundColor yellow "[*] Now searching Email using detector file $DetectorFile. Results will be written to $folderName."
         foreach($detect in $detector.Detectors){
             Invoke-SearchMailbox -Tokens $tokens -SearchTerm $detect.SearchQuery -DetectorName $detect.DetectorName -MessageCount 500 -OutFile $mailout -GraphRun -PageResults
         }
@@ -7017,7 +7017,7 @@ function Invoke-GraphRunner{
     if(!$DisableSharePoint){
         $spout = "$folderName\interesting-files.csv"
 
-        Write-Host -ForegroundColor yellow "[*] Now searching SharePoint and OneDrive using detector file $DetectorFile. Results will be written to $folderName."
+        Write-Output -ForegroundColor yellow "[*] Now searching SharePoint and OneDrive using detector file $DetectorFile. Results will be written to $folderName."
         foreach($detect in $detector.Detectors){
             Invoke-SearchSharePointAndOneDrive  -Tokens $tokens -SearchTerm $detect.SearchQuery -DetectorName $detect.DetectorName -PageResults -ResultCount 500 -ReportOnly -OutFile $spout -GraphRun
         }
@@ -7026,7 +7026,7 @@ function Invoke-GraphRunner{
     # Teams
     if(!$DisableTeams){
         $teamsout = "$folderName\interesting-teamsmessages.csv"
-        Write-Host -ForegroundColor yellow "[*] Now searching Teams using detector file $DetectorFile. Results will be written to $folderName."
+        Write-Output -ForegroundColor yellow "[*] Now searching Teams using detector file $DetectorFile. Results will be written to $folderName."
         foreach($detect in $detector.Detectors){
             Invoke-SearchTeams  -Tokens $tokens -SearchTerm $detect.SearchQuery -DetectorName $detect.DetectorName -ResultSize 500 -OutFile $teamsout -GraphRun
         }
