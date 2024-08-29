@@ -7032,7 +7032,7 @@ function Invoke-GraphRunner{
         }
     }
 
-    Write-Host -ForegroundColor yellow "[*] Results have been written to $folderName"
+    Write-Output -ForegroundColor yellow "[*] Results have been written to $folderName"
 }
 function Get-TenantID
 {
