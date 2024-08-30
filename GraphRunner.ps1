@@ -171,7 +171,7 @@ function Get-GraphTokens{
             -Body $body
         Write-Output -ForegroundColor yellow $authResponse.Message
         Write-Output "`n$($authResponse.message)"
-        Write-Host "`n$($authResponse.device_code)"
+
 
         $continue = "authorization_pending"
         while ($continue) {
@@ -4029,7 +4029,7 @@ function Get-UpdatableGroups{
         $Browser = "Edge",  # Set the default value to "Edge"
         [Parameter(Mandatory = $False)]
         [string]
-        $OutputFile = "Updatable_groups.csv",  # Set the default value to "Updatable_groups.csv"
+        $OutputFile = "Updatable_groups.txt",  # Set the default value to "Updatable_groups.csv"
         [Parameter(Mandatory=$False)]
         [switch]
         $AutoRefresh,
@@ -6928,6 +6928,12 @@ function Invoke-GraphRunner{
     [switch]
     $DisableUsers,
     [switch]
+    $DisableEditGroups,
+    [switch]
+    $Distrogroups,
+    [switch]
+    $entragrpinfo,
+    [switch]
     $DisableGroups,
     [switch]
     $DisableCAPS,
@@ -6985,6 +6991,24 @@ function Invoke-GraphRunner{
         Get-AzureADUsers -Tokens $tokens -GraphRun -outfile "$folderName\users.txt"
     }
 
+    # UpdateGroups
+    if(!$DisableEditGroups){
+        Write-Output -ForegroundColor yellow "[*] Now getting UpdateGroups"
+        Get-UpdatableGroups -Tokens $tokens -GraphRun -outfile "$folderName\Updatable_groups.txt"
+    }
+
+    # DynamGroups
+    if(!$Distrogroups){
+        Write-Output "Now getting DynamicGroups"
+        Get-DynamicGroups -Tokens $tokens -GraphRun -outfile "$folderName\DynamicGroups.txt"
+    }
+
+    # EntraGroup
+    if(!$entragrpinfo){
+        Write-Output "Now getting EntraGroupinfo"
+        Get-EntraIDGroupInfo -Tokens $tokens -GraphRun - -outfile "$folderName\EntraGrpinfo.txt"
+    }
+
     # Groups
     if(!$DisableGroups){
         Write-Output -ForegroundColor yellow "[*] Now getting all groups"
@@ -6998,10 +7022,10 @@ function Invoke-GraphRunner{
     }
 
     # Apps
-    #if(!$DisableApps){
-        #Write-Output -ForegroundColor yellow "[*] Now getting applications"
-        #Invoke-DumpApps -Tokens $tokens -GraphRun | Out-File -Encoding ascii "$foldername\apps.txt"
-    #}
+    if(!$DisableApps){
+        Write-Output -ForegroundColor yellow "[*] Now getting applications"
+        Invoke-DumpApps -Tokens $tokens -GraphRun | Out-File -Encoding ascii "$foldername\apps.txt"
+    }
 
     # Email
     if(!$DisableEmail){
