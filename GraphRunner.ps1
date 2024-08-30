@@ -6992,10 +6992,10 @@ function Invoke-GraphRunner{
     }
 
     # UpdateGroups
-    if(!$DisableEditGroups){
-        Write-Output "Now getting UpdateGroups"
-        Get-UpdatableGroups -Tokens $tokens -OutputFile "$folderName\Updatable_groups.txt"
-    }
+    #if(!$DisableEditGroups){
+        #Write-Output "Now getting UpdateGroups"
+        #Get-UpdatableGroups -Tokens $tokens -OutputFile "$folderName\Updatable_groups.txt"
+    #}
 
     # DynamGroups
     if(!$Distrogroups){
@@ -7017,7 +7017,7 @@ function Invoke-GraphRunner{
 
     # CAPS
     if(!$DisableCAPS){
-        Write-Output -ForegroundColor yellow "[*] Now getting conditional access policies"
+        Write-Output "Now getting conditional access policies"
         Invoke-DumpCAPS -Tokens $tokens -ResolveGuids -GraphRun | Out-File -Encoding ascii "$folderName\caps.txt"
     }
 
@@ -7031,7 +7031,7 @@ function Invoke-GraphRunner{
     if(!$DisableEmail){
         $mailout = "$folderName\interesting-mail.csv"
 
-        Write-Output -ForegroundColor yellow "[*] Now searching Email using detector file $DetectorFile. Results will be written to $folderName."
+        Write-Output "Now searching Email using detector file $DetectorFile. Results will be written to $folderName."
         foreach($detect in $detector.Detectors){
             Invoke-SearchMailbox -Tokens $tokens -SearchTerm $detect.SearchQuery -DetectorName $detect.DetectorName -MessageCount 500 -OutFile $mailout -GraphRun -PageResults
         }
@@ -7041,7 +7041,7 @@ function Invoke-GraphRunner{
     if(!$DisableSharePoint){
         $spout = "$folderName\interesting-files.csv"
 
-        Write-Output -ForegroundColor yellow "[*] Now searching SharePoint and OneDrive using detector file $DetectorFile. Results will be written to $folderName."
+        Write-Output "Now searching SharePoint and OneDrive using detector file $DetectorFile. Results will be written to $folderName."
         foreach($detect in $detector.Detectors){
             Invoke-SearchSharePointAndOneDrive  -Tokens $tokens -SearchTerm $detect.SearchQuery -DetectorName $detect.DetectorName -PageResults -ResultCount 500 -ReportOnly -OutFile $spout -GraphRun
         }
