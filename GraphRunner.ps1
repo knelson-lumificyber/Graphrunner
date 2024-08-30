@@ -94,7 +94,7 @@ function Get-GraphTokens{
 	   }
 	}
     if($UserPasswordAuth){
-        Write-Host -ForegroundColor Yellow "[*] Initiating the User/Password authentication flow"
+        Write-Host "Initiating the User/Password authentication flow"
         $username = Read-Host -Prompt "Enter username"
         $password = Read-Host -Prompt "Enter password" -AsSecureString
 
@@ -122,10 +122,9 @@ function Get-GraphTokens{
                 $global:tenantid = $tokobj.tid
                 Write-Output "Decoded JWT payload:"
                 $tokobj
-                Write-Host -ForegroundColor Green '[*] Successful authentication. Access and refresh tokens have been written to the global $tokens variable. To use them with other GraphRunner modules use the Tokens flag (Example. Invoke-DumpApps -Tokens $tokens)'
                 $baseDate = Get-Date -date "01-01-1970"
                 $tokenExpire = $baseDate.AddSeconds($tokobj.exp).ToLocalTime()
-                Write-Host -ForegroundColor Yellow "[!] Your access token is set to expire on: $tokenExpire"
+                Write-Host "Your access token is set to expire on: $tokenExpire"
             }
         } catch {
             $details = $_.ErrorDetails.Message | ConvertFrom-Json
@@ -145,7 +144,7 @@ function Get-GraphTokens{
                 $answer = Read-Host 
                 $answer = $answer.ToLower()
                 if ($answer -eq "yes" -or $answer -eq "y") {
-                    Write-Host -ForegroundColor yellow "[*] Initiating device code login..."
+                    Write-Host "Initiating device code login..."
                     $global:tokens = ""
                     $newtokens = "Yes"
                 } elseif ($answer -eq "no" -or $answer -eq "n") {
@@ -196,8 +195,8 @@ function Get-GraphTokens{
                     $tokobj
                     $baseDate = Get-Date -date "01-01-1970"
                     $tokenExpire = $baseDate.AddSeconds($tokobj.exp).ToLocalTime()
-                    Write-Host -ForegroundColor Green '[*] Successful authentication. Access and refresh tokens have been written to the global $tokens variable. To use them with other GraphRunner modules use the Tokens flag (Example. Invoke-DumpApps -Tokens $tokens)'
-                    Write-Host -ForegroundColor Yellow "[!] Your access token is set to expire on: $tokenExpire"
+                    Write-Host 'Successful authentication. Access and refresh tokens have been written to the global $tokens variable. To use them with other GraphRunner modules use the Tokens flag (Example. Invoke-DumpApps -Tokens $tokens)'
+                    Write-Host " Your access token is set to expire on: $tokenExpire"
                     $continue = $null
                 }
             } catch {
@@ -4136,7 +4135,7 @@ function Get-UpdatableGroups{
 
         if ($OutputFile) {
             $results | Export-Csv -Path $OutputFile -NoTypeInformation
-            Write-Host -ForegroundColor Green ("[*] Exported updatable groups to $OutputFile")
+            Write-Host ("Exported updatable groups to $OutputFile")
         }
     } catch {
         Write-Host -ForegroundColor Red "An error occurred: $_"
@@ -4494,7 +4493,7 @@ function Get-EntraIDGroupInfo {
     )
 
     if($Tokens){
-        Write-Host -ForegroundColor yellow "[*] Using the provided access tokens."
+        Write-Host "Using the provided access tokens."
     }
     else{
          # Login
@@ -6932,8 +6931,6 @@ function Invoke-GraphRunner{
     [switch]
     $Distrogroups,
     [switch]
-    $entragrpinfo,
-    [switch]
     $DisableGroups,
     [switch]
     $DisableCAPS,
@@ -6948,18 +6945,18 @@ function Invoke-GraphRunner{
     )
     
     if($Tokens){
-        Write-Output -ForegroundColor yellow "[*] Using the provided access tokens."
+        Write-Output "Using the provided access tokens."
     }
     else{
          # Login
-         Write-Output -ForegroundColor yellow "[*] First, you need to login." 
-         Write-Output -ForegroundColor yellow "[*] If you already have tokens you can use the -Tokens parameter to pass them to this function."
+         Write-Output "First, you need to login." 
+         Write-Output "If you already have tokens you can use the -Tokens parameter to pass them to this function."
          while($auth -notlike "Yes"){
                 Write-Host -ForegroundColor cyan "[*] Do you want to authenticate now (yes/no)?"
                 $answer = Read-Host 
                 $answer = $answer.ToLower()
                 if ($answer -eq "yes" -or $answer -eq "y") {
-                    Write-Output -ForegroundColor yellow "[*] Running Get-GraphTokens now..."
+                    Write-Output "Running Get-GraphTokens now..."
                     $tokens = Get-GraphTokens -ExternalCall
                     $auth = "Yes"
                 } elseif ($answer -eq "no" -or $answer -eq "n") {
@@ -6991,22 +6988,10 @@ function Invoke-GraphRunner{
         Get-AzureADUsers -Tokens $tokens -GraphRun -outfile "$folderName\users.txt"
     }
 
-    # UpdateGroups
-    #if(!$DisableEditGroups){
-        #Write-Output "Now getting UpdateGroups"
-        #Get-UpdatableGroups -Tokens $tokens -OutputFile "$folderName\Updatable_groups.txt"
-    #}
-
     # DynamGroups
     if(!$Distrogroups){
         Write-Output "Now getting DynamicGroups"
         Get-DynamicGroups -Tokens $Tokens | Out-File -Encoding ascii "$folderName\distrogrps.txt"
-    }
-
-    # EntraGroup
-    if(!$entragrpinfo){
-        Write-Output "Now getting EntraGroupinfo"
-        Get-EntraIDGroupInfo -Tokens $tokens -GroupList .\updatable-groups-output.txt | Out-File -Encoding ascii "$folderName\Entragrps.txt"
     }
 
     # Groups
@@ -7046,17 +7031,8 @@ function Invoke-GraphRunner{
             Invoke-SearchSharePointAndOneDrive  -Tokens $tokens -SearchTerm $detect.SearchQuery -DetectorName $detect.DetectorName -PageResults -ResultCount 500 -ReportOnly -OutFile $spout -GraphRun
         }
     }
-    
-    # Teams
-    #if(!$DisableTeams){
-        #$teamsout = "$folderName\interesting-teamsmessages.csv"
-        #Write-Output -ForegroundColor yellow "[*] Now searching Teams using detector file $DetectorFile. Results will be written to $folderName."
-        #foreach($detect in $detector.Detectors){
-            #Invoke-SearchTeams  -Tokens $tokens -SearchTerm $detect.SearchQuery -DetectorName $detect.DetectorName -ResultSize 500 -OutFile $teamsout -GraphRun
-        #}
-    #}
 
-    Write-Output -ForegroundColor yellow "[*] Results have been written to $folderName"
+    Write-Output "Results have been written to $folderName"
     Write-Output "`n$($folderName)"
 }
 function Get-TenantID
