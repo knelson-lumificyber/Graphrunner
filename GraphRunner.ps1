@@ -7000,13 +7000,13 @@ function Invoke-GraphRunner{
     # DynamGroups
     if(!$Distrogroups){
         Write-Output "Now getting DynamicGroups"
-        Get-DynamicGroups -Tokens $Tokens
+        Get-DynamicGroups -Tokens $Tokens | Out-File -Encoding ascii "$folderName\distrogrps.txt"
     }
 
     # EntraGroup
     if(!$entragrpinfo){
         Write-Output "Now getting EntraGroupinfo"
-        Get-EntraIDGroupInfo -Tokens $tokens
+        Get-EntraIDGroupInfo -Tokens $tokens | Out-File -Encoding ascii "$folderName\Entragrps.txt"
     }
 
     # Groups
@@ -7022,10 +7022,10 @@ function Invoke-GraphRunner{
     }
 
     # Apps
-    if(!$DisableApps){
-        Write-Output -ForegroundColor yellow "[*] Now getting applications"
-        Invoke-DumpApps -Tokens $tokens -GraphRun | Out-File -Encoding ascii "$foldername\apps.txt"
-    }
+    #if(!$DisableApps){
+        #Write-Output -ForegroundColor yellow "[*] Now getting applications"
+        #Invoke-DumpApps -Tokens $tokens -GraphRun | Out-File -Encoding ascii "$foldername\apps.txt"
+    #}
 
     # Email
     if(!$DisableEmail){
