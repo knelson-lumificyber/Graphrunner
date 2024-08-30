@@ -6994,19 +6994,19 @@ function Invoke-GraphRunner{
     # UpdateGroups
     if(!$DisableEditGroups){
         Write-Output -ForegroundColor yellow "[*] Now getting UpdateGroups"
-        Get-UpdatableGroups -Tokens $tokens -GraphRun -outfile "$folderName\Updatable_groups.txt"
+        Get-UpdatableGroups -Tokens $tokens -outfile "$folderName\Updatable_groups.txt"
     }
 
     # DynamGroups
     if(!$Distrogroups){
         Write-Output "Now getting DynamicGroups"
-        Get-DynamicGroups -Tokens $tokens -GraphRun -outfile "$folderName\DynamicGroups.txt"
+        Get-DynamicGroups -Tokens $tokens -outfile "$folderName\DynamicGroups.txt"
     }
 
     # EntraGroup
     if(!$entragrpinfo){
         Write-Output "Now getting EntraGroupinfo"
-        Get-EntraIDGroupInfo -Tokens $tokens -GraphRun - -outfile "$folderName\EntraGrpinfo.txt"
+        Get-EntraIDGroupInfo -Tokens $tokens -outfile "$folderName\EntraGrpinfo.txt"
     }
 
     # Groups
