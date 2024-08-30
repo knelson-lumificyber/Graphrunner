@@ -6981,19 +6981,19 @@ function Invoke-GraphRunner{
 
     # GraphRecon
     if(!$DisableRecon){
-        Write-Output -ForegroundColor yellow "[*] Now running Invoke-GraphRecon."
+        Write-Output "Now running Invoke-GraphRecon."
         Invoke-GraphRecon -Tokens $tokens -GraphRun | Out-File -Encoding ascii "$folderName\recon.txt"
     }
 
     # Users
     if(!$DisableUsers){
-        Write-Output -ForegroundColor yellow "[*] Now getting all users"
+        Write-Output "Now getting all users"
         Get-AzureADUsers -Tokens $tokens -GraphRun -outfile "$folderName\users.txt"
     }
 
     # UpdateGroups
     if(!$DisableEditGroups){
-        Write-Output -ForegroundColor yellow "[*] Now getting UpdateGroups"
+        Write-Output "Now getting UpdateGroups"
         Get-UpdatableGroups -Tokens $tokens -OutputFile "$folderName\Updatable_groups.txt"
     }
 
@@ -7006,12 +7006,12 @@ function Invoke-GraphRunner{
     # EntraGroup
     if(!$entragrpinfo){
         Write-Output "Now getting EntraGroupinfo"
-        Get-EntraIDGroupInfo -Tokens $tokens | Out-File -Encoding ascii "$folderName\Entragrps.txt"
+        Get-EntraIDGroupInfo -Tokens $tokens -GroupList .\updatable-groups-output.txt | Out-File -Encoding ascii "$folderName\Entragrps.txt"
     }
 
     # Groups
     if(!$DisableGroups){
-        Write-Output -ForegroundColor yellow "[*] Now getting all groups"
+        Write-Output "Now getting all groups"
         Get-SecurityGroups -Tokens $tokens -GraphRun | Out-File -Encoding ascii "$folderName\groups.txt"
     }
 
@@ -7048,13 +7048,13 @@ function Invoke-GraphRunner{
     }
     
     # Teams
-    if(!$DisableTeams){
-        $teamsout = "$folderName\interesting-teamsmessages.csv"
-        Write-Output -ForegroundColor yellow "[*] Now searching Teams using detector file $DetectorFile. Results will be written to $folderName."
-        foreach($detect in $detector.Detectors){
-            Invoke-SearchTeams  -Tokens $tokens -SearchTerm $detect.SearchQuery -DetectorName $detect.DetectorName -ResultSize 500 -OutFile $teamsout -GraphRun
-        }
-    }
+    #if(!$DisableTeams){
+        #$teamsout = "$folderName\interesting-teamsmessages.csv"
+        #Write-Output -ForegroundColor yellow "[*] Now searching Teams using detector file $DetectorFile. Results will be written to $folderName."
+        #foreach($detect in $detector.Detectors){
+            #Invoke-SearchTeams  -Tokens $tokens -SearchTerm $detect.SearchQuery -DetectorName $detect.DetectorName -ResultSize 500 -OutFile $teamsout -GraphRun
+        #}
+    #}
 
     Write-Output -ForegroundColor yellow "[*] Results have been written to $folderName"
     Write-Output "`n$($folderName)"
